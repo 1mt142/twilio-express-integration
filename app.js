@@ -1,5 +1,6 @@
 var createError = require("http-errors");
 var express = require("express");
+const DeviceDetector = require("device-detector-js");
 require("dotenv").config();
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -27,6 +28,17 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/send-sms", smsSend);
 app.use("/get-post", posts);
+
+app.use("/hello", (req, res, next) => {
+  const headerInfo = req.headers["user-agent"];
+  const deviceDetector = new DeviceDetector();
+  const userAgent = headerInfo;
+  const device = deviceDetector.parse(userAgent);
+  res.json({
+    message: "Hi,Hello",
+    data: device,
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
